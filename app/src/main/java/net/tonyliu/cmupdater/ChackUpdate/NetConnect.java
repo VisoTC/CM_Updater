@@ -1,6 +1,7 @@
 package net.tonyliu.cmupdater.ChackUpdate;
 
 import net.tonyliu.cmupdater.Item;
+import net.tonyliu.cmupdater.Tool.SortComparator;
 import net.tonyliu.cmupdater.ValueInfo;
 
 import org.json.JSONArray;
@@ -11,6 +12,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -55,21 +58,49 @@ public class NetConnect {
     /**
      * Json解析并写入版本列表集合
      */
+    /** 版本文件示例
+    {
+	    "minimumVersion": 2,
+        "VersionList":[
+        {
+        	"Name": "cm-13.0-20160203-UNOFFICIAL-pisces",
+        	"Version": 20160203,
+        	"Description": "",
+        	"Url": "http://cmupdate-10021188.file.myqcloud.com/cm-13.0-20160203-UNOFFICIAL-pisces.zip",
+        	"Hash": "Hash"
+	    },
+    	{
+	        "Name": "cm-13.0-20160204-UNOFFICIAL-pisces",
+	        "Version": 20160204,
+            "Description": "cm-13.0-20160204-UNOFFICIAL-pisces",
+	        "Url": "http://cmupdate-10021188.file.myqcloud.com/cm-13.0-20160204-UNOFFICIAL-pisces.zip",
+	        "Hash": "Hash"
+    	},
+    	{
+    	    "Name": "cm-13.0-20160205-UNOFFICIAL-pisces",
+        	"Version": 20160205,
+        	"Description": "cm-13.0-20160205-UNOFFICIAL-pisces",
+        	"Url": "http://cmupdate-10021188.file.myqcloud.com/cm-13.0-20160205-UNOFFICIAL-pisces.zip",
+           "Hash": "Hash"}
+	    ]
+    }
+    */
     public void parseJson(String strResult) {
         try {
             JSONObject jsonObj = new JSONObject(strResult);
             JSONArray jsonArray = jsonObj.getJSONArray("VersionList");
-            if (jsonObj.getInt("minimumVersion") == 2) {
+            if (jsonObj.getInt("minimumVersion") == 2) {      //配置读取的版本号
                 for (int i = 0; i < jsonArray.length(); i++) {
                     JSONObject list = (JSONObject) jsonArray.get(i);
                     Item item = new Item(
-                            list.getString("Name"),
-                            list.getInt("Version"),
-                            list.getString("Description"),
-                            list.getString("Url"),
-                            list.getString("Hash")
+                            list.getString("Name"),           //名字
+                            list.getInt("Version"),           //版本号
+                            list.getString("Description"),    //简介
+                            list.getString("Url"),            //下载地址
+                            list.getString("Hash")            //哈希值
                     );
-                    sequence(ValueInfo.versionInfoList, item);
+                    Comparator comp = new SortComparator();
+                    Collections.sort(ValueInfo.versionInfoList, comp);//
                 }
             }
 
