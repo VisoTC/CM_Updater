@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">CM_Updater</string>
+    <!-- 按钮名称 -->
+    <string name="download">Download</string>
+    <string name="install">Install</string>
+    <string name="installed">Installed</string>
+</resources>
